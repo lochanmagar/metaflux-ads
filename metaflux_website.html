@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MetaFlux Ads — AI-Powered Product Ads for Beauty Brands</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold: #C9A96E;
+  --gold2: #E8D5A3;
+  --dark: #080808;
+  --dark2: #111111;
+  --dark3: #1A1A1A;
+  --dark4: #222222;
+  --text: #F0EBE3;
+  --muted: #777;
+  --muted2: #555;
+  --accent: #C9A96E;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--dark);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* Custom cursor */
+.cursor {
+  width: 8px; height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.1s;
+}
+.cursor-ring {
+  width: 32px; height: 32px;
+  border: 1px solid rgba(201,169,110,0.4);
+  border-radius: 50%;
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9998;
+  transition: all 0.15s ease;
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 20px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to bottom, rgba(8,8,8,0.95), transparent);
+  backdrop-filter: blur(10px);
+}
+
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 3px;
+  color: var(--text);
+}
+.nav-logo span { color: var(--gold); }
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+.nav-links a {
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--gold); }
+
+.nav-cta {
+  background: var(--gold);
+  color: var(--dark) !important;
+  padding: 10px 22px !important;
+  font-weight: 600 !important;
+  letter-spacing: 1px !important;
+}
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 120px 48px 80px;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 60% 40%, rgba(201,169,110,0.07) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 40% at 10% 90%, rgba(201,169,110,0.04) 0%, transparent 50%);
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(201,169,110,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,169,110,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  text-align: center;
+}
+
+.hero-tag {
+  display: inline-block;
+  border: 1px solid rgba(201,169,110,0.3);
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 7px 18px;
+  margin-bottom: 32px;
+  animation: fadeUp 0.8s ease forwards;
+  opacity: 0;
+}
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(64px, 10vw, 130px);
+  line-height: 0.92;
+  letter-spacing: 2px;
+  margin-bottom: 28px;
+  animation: fadeUp 0.8s 0.15s ease forwards;
+  opacity: 0;
+}
+
+.hero-title .gold { color: var(--gold); }
+.hero-title .italic {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 0.85em;
+}
+
+.hero-sub {
+  font-size: 17px;
+  color: var(--muted);
+  font-weight: 300;
+  max-width: 520px;
+  margin: 0 auto 48px;
+  line-height: 1.7;
+  animation: fadeUp 0.8s 0.3s ease forwards;
+  opacity: 0;
+}
+
+.hero-btns {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeUp 0.8s 0.45s ease forwards;
+  opacity: 0;
+}
+
+.btn-primary {
+  background: var(--gold);
+  color: var(--dark);
+  padding: 16px 36px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: none;
+  cursor: none;
+}
+.btn-primary:hover { background: var(--gold2); transform: translateY(-2px); }
+
+.btn-secondary {
+  border: 1px solid rgba(201,169,110,0.4);
+  color: var(--gold);
+  padding: 16px 36px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: none;
+}
+.btn-secondary:hover { border-color: var(--gold); background: rgba(201,169,110,0.08); }
+
+.hero-stats {
+  display: flex;
+  gap: 64px;
+  justify-content: center;
+  margin-top: 80px;
+  padding-top: 48px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  animation: fadeUp 0.8s 0.6s ease forwards;
+  opacity: 0;
+}
+
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 48px;
+  color: var(--gold);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(24px); }
+}
+
+/* MARQUEE */
+.marquee-wrap {
+  background: var(--gold);
+  padding: 14px 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.marquee-inner {
+  display: inline-flex;
+  animation: marquee 20s linear infinite;
+  gap: 0;
+}
+.marquee-inner span {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 3px;
+  color: var(--dark);
+  padding: 0 40px;
+}
+.marquee-inner span.dot { color: rgba(8,8,8,0.4); }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* SECTION BASE */
+section { padding: 100px 48px; }
+.section-tag {
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(40px, 6vw, 72px);
+  line-height: 1;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+.section-title .italic {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  color: var(--gold);
+}
+
+/* HOW IT WORKS */
+.how {
+  background: var(--dark2);
+  position: relative;
+  overflow: hidden;
+}
+
+.how::before {
+  content: 'HOW';
+  position: absolute;
+  right: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 300px;
+  color: rgba(201,169,110,0.03);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.how-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 64px;
+}
+
+.how-card {
+  background: var(--dark3);
+  padding: 48px 36px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+.how-card:hover { background: var(--dark4); }
+
+.how-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 96px;
+  color: rgba(201,169,110,0.08);
+  line-height: 1;
+  position: absolute;
+  top: 16px; right: 24px;
+}
+.how-icon {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+.how-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 24px;
+  font-style: italic;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.how-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* PACKAGES */
+.packages { background: var(--dark); }
+
+.pkg-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 64px;
+}
+
+.pkg-card {
+  background: var(--dark3);
+  padding: 48px 36px;
+  position: relative;
+  border: 1px solid transparent;
+  transition: all 0.3s;
+}
+
+.pkg-card.featured {
+  background: var(--dark2);
+  border-color: rgba(201,169,110,0.3);
+}
+
+.pkg-card:hover { border-color: rgba(201,169,110,0.2); }
+.pkg-card.featured:hover { border-color: var(--gold); }
+
+.pkg-badge {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--dark);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  margin-bottom: 24px;
+}
+
+.pkg-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.pkg-tagline {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 28px;
+  font-style: italic;
+  font-family: 'Instrument Serif', serif;
+}
+
+.pkg-price {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 64px;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.pkg-price sup { font-size: 28px; vertical-align: super; }
+.pkg-period {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  margin-bottom: 32px;
+}
+
+.pkg-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+  margin: 28px 0;
+}
+
+.pkg-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 36px;
+}
+.pkg-features li {
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(240,235,227,0.8);
+  font-weight: 300;
+  align-items: flex-start;
+}
+.pkg-features li::before {
+  content: '✦';
+  color: var(--gold);
+  font-size: 10px;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.pkg-btn {
+  display: block;
+  text-align: center;
+  padding: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: none;
+}
+.pkg-btn-outline {
+  border: 1px solid rgba(201,169,110,0.4);
+  color: var(--gold);
+}
+.pkg-btn-outline:hover { background: rgba(201,169,110,0.08); }
+.pkg-btn-filled {
+  background: var(--gold);
+  color: var(--dark);
+}
+.pkg-btn-filled:hover { background: var(--gold2); }
+
+/* PORTFOLIO */
+.portfolio { background: var(--dark2); }
+
+.port-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 64px;
+}
+
+.port-item {
+  aspect-ratio: 9/16;
+  background: var(--dark3);
+  position: relative;
+  overflow: hidden;
+  cursor: none;
+}
+
+.port-item:first-child { grid-column: span 2; aspect-ratio: auto; min-height: 400px; }
+
+.port-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(8,8,8,0.9) 0%, transparent 60%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 28px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.port-item:hover .port-overlay { opacity: 1; }
+
+.port-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.port-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+  font-style: italic;
+}
+
+.port-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--dark3);
+  border: 1px dashed rgba(201,169,110,0.15);
+}
+.port-placeholder span { font-size: 32px; }
+.port-placeholder p { font-size: 12px; color: var(--muted); letter-spacing: 1px; }
+
+/* REVIEWS */
+.reviews { background: var(--dark); }
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 64px;
+}
+
+.review-card {
+  background: var(--dark3);
+  padding: 36px;
+  position: relative;
+}
+
+.review-stars {
+  color: var(--gold);
+  font-size: 14px;
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+}
+
+.review-text {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.6;
+  color: rgba(240,235,227,0.85);
+  margin-bottom: 24px;
+}
+
+.review-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.review-avatar {
+  width: 40px; height: 40px;
+  background: rgba(201,169,110,0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.review-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+.review-brand {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* BOOKING */
+.booking {
+  background: var(--dark2);
+  position: relative;
+  overflow: hidden;
+}
+
+.booking::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(201,169,110,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.booking-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.booking-form {
+  background: var(--dark3);
+  padding: 48px;
+  border: 1px solid rgba(201,169,110,0.1);
+}
+
+.form-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 2px;
+  margin-bottom: 32px;
+  color: var(--gold);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  background: var(--dark2);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text);
+  padding: 14px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-input:focus { border-color: rgba(201,169,110,0.4); }
+
+.form-select {
+  width: 100%;
+  background: var(--dark2);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text);
+  padding: 14px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  outline: none;
+  appearance: none;
+  cursor: none;
+}
+
+.form-submit {
+  width: 100%;
+  background: var(--gold);
+  color: var(--dark);
+  border: none;
+  padding: 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: none;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+.form-submit:hover { background: var(--gold2); }
+
+/* FAQ */
+.faq { background: var(--dark); }
+
+.faq-list {
+  margin-top: 64px;
+  max-width: 800px;
+}
+
+.faq-item {
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+
+.faq-q {
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--text);
+  text-align: left;
+  padding: 24px 0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.faq-q span:last-child {
+  color: var(--gold);
+  font-size: 24px;
+  font-weight: 300;
+  flex-shrink: 0;
+  transition: transform 0.3s;
+}
+
+.faq-item.open .faq-q span:last-child { transform: rotate(45deg); }
+
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.8;
+  font-weight: 300;
+}
+
+.faq-item.open .faq-a {
+  max-height: 200px;
+  padding-bottom: 24px;
+}
+
+/* CONTACT */
+.contact {
+  background: var(--dark2);
+  text-align: center;
+  padding: 100px 48px 80px;
+}
+
+.contact-links {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 48px;
+}
+
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--dark3);
+  border: 1px solid rgba(201,169,110,0.15);
+  color: var(--text);
+  text-decoration: none;
+  padding: 14px 24px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: none;
+}
+.contact-link:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  transform: translateY(-2px);
+}
+.contact-link .icon { font-size: 18px; }
+
+.contact-availability {
+  margin-top: 48px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(201,169,110,0.08);
+  border: 1px solid rgba(201,169,110,0.2);
+  padding: 12px 24px;
+  font-size: 13px;
+  color: var(--gold);
+}
+
+.pulse {
+  width: 8px; height: 8px;
+  background: #4ade80;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.4); }
+}
+
+/* FOOTER */
+footer {
+  background: var(--dark);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding: 40px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 3px;
+}
+.footer-logo span { color: var(--gold); }
+
+.footer-copy {
+  font-size: 12px;
+  color: var(--muted2);
+  letter-spacing: 0.5px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 24px;
+}
+.footer-links a {
+  font-size: 12px;
+  color: var(--muted2);
+  text-decoration: none;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--gold); }
+
+/* MOBILE */
+@media (max-width: 768px) {
+  nav { padding: 16px 20px; }
+  .nav-links { display: none; }
+  section { padding: 70px 20px; }
+  .hero { padding: 100px 20px 60px; }
+  .hero-stats { gap: 32px; }
+  .stat-num { font-size: 36px; }
+  .how-grid, .pkg-grid, .port-grid, .review-grid { grid-template-columns: 1fr; }
+  .port-item:first-child { grid-column: span 1; }
+  .booking-inner { grid-template-columns: 1fr; gap: 40px; }
+  .booking-form { padding: 28px; }
+  footer { flex-direction: column; text-align: center; }
+  .contact-links { flex-direction: column; align-items: center; }
+  body { cursor: auto; }
+  .cursor, .cursor-ring { display: none; }
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Meta<span>Flux</span> Ads</div>
+  <ul class="nav-links">
+    <li><a href="#how">Process</a></li>
+    <li><a href="#packages">Packages</a></li>
+    <li><a href="#portfolio">Work</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#booking" class="nav-cta">Book a Call</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">AI-Powered UGC Ads · Beauty & Skincare</div>
+    <h1 class="hero-title">
+      Your Product.<br>
+      <span class="gold italic">Studio Quality.</span><br>
+      Zero Shoot.
+    </h1>
+    <p class="hero-sub">Premium AI-generated product ads that convert — no filming, no models, no waiting weeks. Built for beauty & skincare brands ready to scale.</p>
+    <div class="hero-btns">
+      <a href="#booking" class="btn-primary">Get Your Free Sample</a>
+      <a href="#packages" class="btn-secondary">View Packages</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">4K</div>
+        <div class="stat-label">Resolution</div>
+      </div>
+      <div>
+        <div class="stat-num">48H</div>
+        <div class="stat-label">Delivery</div>
+      </div>
+      <div>
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Niches Covered</div>
+      </div>
+      <div>
+        <div class="stat-num">24/7</div>
+        <div class="stat-label">Support</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-inner">
+    <span>AI UGC ADS</span><span class="dot">✦</span>
+    <span>BEAUTY BRANDS</span><span class="dot">✦</span>
+    <span>NO SHOOT NEEDED</span><span class="dot">✦</span>
+    <span>4K QUALITY</span><span class="dot">✦</span>
+    <span>REELS READY</span><span class="dot">✦</span>
+    <span>SKINCARE ADS</span><span class="dot">✦</span>
+    <span>FAST DELIVERY</span><span class="dot">✦</span>
+    <span>AI UGC ADS</span><span class="dot">✦</span>
+    <span>BEAUTY BRANDS</span><span class="dot">✦</span>
+    <span>NO SHOOT NEEDED</span><span class="dot">✦</span>
+    <span>4K QUALITY</span><span class="dot">✦</span>
+    <span>REELS READY</span><span class="dot">✦</span>
+    <span>SKINCARE ADS</span><span class="dot">✦</span>
+    <span>FAST DELIVERY</span><span class="dot">✦</span>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="section-tag reveal">The Process</div>
+  <h2 class="section-title reveal">How It <span class="italic">Works</span></h2>
+  <div class="how-grid">
+    <div class="how-card reveal">
+      <div class="how-num">01</div>
+      <div class="how-icon">📦</div>
+      <div class="how-title">Send Your Product</div>
+      <p class="how-desc">Share your product images, brand colors, and any specific ideas. That's all we need to get started — no physical product required.</p>
+    </div>
+    <div class="how-card reveal">
+      <div class="how-num">02</div>
+      <div class="how-icon">🎬</div>
+      <div class="how-title">We Create Your Ad</div>
+      <p class="how-desc">Our AI-powered process builds a premium 30-second product ad — custom script, 4K visuals, professional model, and editing all included.</p>
+    </div>
+    <div class="how-card reveal">
+      <div class="how-num">03</div>
+      <div class="how-icon">🚀</div>
+      <div class="how-title">Receive & Post</div>
+      <p class="how-desc">Get your final video within 48 hours. Ready to post directly on Instagram Reels, TikTok, Stories, and paid ads. Full commercial rights yours.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PACKAGES -->
+<section class="packages" id="packages">
+  <div class="section-tag reveal">Pricing</div>
+  <h2 class="section-title reveal">Choose Your <span class="italic">Package</span></h2>
+  <div class="pkg-grid">
+
+    <!-- Starter -->
+    <div class="pkg-card reveal">
+      <div class="pkg-name">Starter</div>
+      <div class="pkg-tagline">Test the quality risk-free</div>
+      <div class="pkg-price"><sup>$</sup>99</div>
+      <div class="pkg-period">one-time · 3 videos</div>
+      <div class="pkg-divider"></div>
+      <ul class="pkg-features">
+        <li>3 × 30-second AI product videos</li>
+        <li>Custom script for each video</li>
+        <li>9:16 vertical format</li>
+        <li>4K resolution output</li>
+        <li>1 revision per video</li>
+        <li>Full commercial rights</li>
+        <li>Delivery within 48 hours</li>
+      </ul>
+      <a href="https://www.instagram.com/metaflux_ads" target="_blank" class="pkg-btn pkg-btn-outline">Get Started</a>
+    </div>
+
+    <!-- Elite Monthly — FEATURED -->
+    <div class="pkg-card featured reveal">
+      <div class="pkg-badge">Most Popular</div>
+      <div class="pkg-name">Elite Monthly</div>
+      <div class="pkg-tagline">Full content domination</div>
+      <div class="pkg-price"><sup>$</sup>600</div>
+      <div class="pkg-period">per month · 20 videos</div>
+      <div class="pkg-divider"></div>
+      <ul class="pkg-features">
+        <li>20 × 30-second AI product videos</li>
+        <li>Custom script for every video</li>
+        <li>9:16 vertical — Reels & TikTok ready</li>
+        <li>4K ultra-high resolution</li>
+        <li>1 revision per video included</li>
+        <li>Full commercial usage rights</li>
+        <li>Priority delivery — 7 days</li>
+        <li>Dedicated account support</li>
+      </ul>
+      <a href="https://www.instagram.com/metaflux_ads" target="_blank" class="pkg-btn pkg-btn-filled">Claim This Package</a>
+    </div>
+
+    <!-- Growth + Posters -->
+    <div class="pkg-card reveal">
+      <div class="pkg-name">Growth+</div>
+      <div class="pkg-tagline">Videos + social posts</div>
+      <div class="pkg-price"><sup>$</sup>750</div>
+      <div class="pkg-period">per month · all-in-one</div>
+      <div class="pkg-divider"></div>
+      <ul class="pkg-features">
+        <li>20 × 30-second AI product videos</li>
+        <li>6 premium product poster designs</li>
+        <li>Custom script for every video</li>
+        <li>9:16 vertical format</li>
+        <li>4K resolution output</li>
+        <li>1 revision per asset</li>
+        <li>Full commercial rights</li>
+        <li>Priority delivery + support</li>
+      </ul>
+      <a href="https://www.instagram.com/metaflux_ads" target="_blank" class="pkg-btn pkg-btn-outline">Get Started</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="portfolio" id="portfolio">
+  <div class="section-tag reveal">Portfolio</div>
+  <h2 class="section-title reveal">Sample <span class="italic">Work</span></h2>
+  <div class="port-grid">
+    <div class="port-item reveal">
+      <div class="port-placeholder">
+        <span>🎬</span>
+        <p>Featured Sample Ad</p>
+      </div>
+      <div class="port-overlay">
+        <div class="port-label">Skincare · 30s</div>
+        <div class="port-title">Serum Product Ad</div>
+      </div>
+    </div>
+    <div class="port-item reveal">
+      <div class="port-placeholder">
+        <span>💄</span>
+        <p>Beauty Sample</p>
+      </div>
+      <div class="port-overlay">
+        <div class="port-label">Beauty · 30s</div>
+        <div class="port-title">Lipstick Ad</div>
+      </div>
+    </div>
+    <div class="port-item reveal">
+      <div class="port-placeholder">
+        <span>🧴</span>
+        <p>Skincare Sample</p>
+      </div>
+      <div class="port-overlay">
+        <div class="port-label">Skincare · 30s</div>
+        <div class="port-title">Moisturizer Ad</div>
+      </div>
+    </div>
+    <div class="port-item reveal">
+      <div class="port-placeholder">
+        <span>🌿</span>
+        <p>Wellness Sample</p>
+      </div>
+      <div class="port-overlay">
+        <div class="port-label">Wellness · 30s</div>
+        <div class="port-title">Supplement Ad</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews" id="reviews">
+  <div class="section-tag reveal">Testimonials</div>
+  <h2 class="section-title reveal">What Clients <span class="italic">Say</span></h2>
+  <div class="review-grid">
+    <div class="review-card reveal">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"The quality blew us away. Looked like we hired a full production team. Our Reels engagement doubled in the first week."</p>
+      <div class="review-author">
+        <div class="review-avatar">🌸</div>
+        <div>
+          <div class="review-name">Sarah M.</div>
+          <div class="review-brand">Glow Beauty Co.</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card reveal">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Fast, professional, and the videos actually converted. I was skeptical about AI ads but this changed my mind completely."</p>
+      <div class="review-author">
+        <div class="review-avatar">💆</div>
+        <div>
+          <div class="review-name">Priya K.</div>
+          <div class="review-brand">Pure Skin Labs</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card reveal">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"We were spending $2000/month on shoots. Now we get better content for a fraction of the cost. This is the future of marketing."</p>
+      <div class="review-author">
+        <div class="review-avatar">✨</div>
+        <div>
+          <div class="review-name">Jessica T.</div>
+          <div class="review-brand">Luxe Cosmetics</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="booking" id="booking">
+  <div class="booking-inner">
+    <div class="reveal">
+      <div class="section-tag">Book a Call</div>
+      <h2 class="section-title">Let's Talk <span class="italic">Strategy</span></h2>
+      <p style="color:var(--muted); font-size:15px; line-height:1.8; margin-bottom:32px; font-weight:300;">
+        Not sure which package is right for your brand? Book a free 15-minute discovery call. We'll understand your goals and build a content plan that actually works.
+      </p>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div style="display:flex;align-items:center;gap:14px;font-size:14px;color:var(--muted);">
+          <span style="color:var(--gold);font-size:20px;">✦</span> Free 15-minute strategy call
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;font-size:14px;color:var(--muted);">
+          <span style="color:var(--gold);font-size:20px;">✦</span> Available 24/7 — Nepal timezone (GMT+5:45)
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;font-size:14px;color:var(--muted);">
+          <span style="color:var(--gold);font-size:20px;">✦</span> No commitment required
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;font-size:14px;color:var(--muted);">
+          <span style="color:var(--gold);font-size:20px;">✦</span> Get a free custom sample for your product
+        </div>
+      </div>
+    </div>
+    <div class="booking-form reveal">
+      <div class="form-title">Send a Message</div>
+      <div class="form-group">
+        <label class="form-label">Your Name</label>
+        <input type="text" class="form-input" placeholder="Jane Smith">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Brand Name</label>
+        <input type="text" class="form-input" placeholder="Your Brand">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" class="form-input" placeholder="you@brand.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Package Interest</label>
+        <select class="form-select">
+          <option>Starter — $99 (3 videos)</option>
+          <option>Elite Monthly — $600 (20 videos)</option>
+          <option>Growth+ — $750 (20 videos + posters)</option>
+          <option>Custom / Not sure yet</option>
+        </select>
+      </div>
+      <button class="form-submit" onclick="window.open('https://www.instagram.com/metaflux_ads','_blank')">
+        Send Message via Instagram →
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="section-tag reveal">FAQ</div>
+  <h2 class="section-title reveal">Common <span class="italic">Questions</span></h2>
+  <div class="faq-list reveal">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>Do I need to send a physical product?</span>
+        <span>+</span>
+      </button>
+      <div class="faq-a">No physical product needed at all! Just send us clear product images, your brand colors, and any specific preferences. Our AI handles everything else.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>How long does delivery take?</span>
+        <span>+</span>
+      </button>
+      <div class="faq-a">Single videos and starter packs are delivered within 48 hours. Monthly packages (20 videos) are delivered within 7 days of confirmation.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>Can I use these videos for paid ads?</span>
+        <span>+</span>
+      </button>
+      <div class="faq-a">Absolutely. All videos come with full commercial usage rights. Use them on Instagram, TikTok, Facebook ads, YouTube, your website — anywhere you want.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>What if I'm not happy with the video?</span>
+        <span>+</span>
+      </button>
+      <div class="faq-a">Every video comes with 1 free revision. Just tell us what you'd like changed and we'll update it within 24 hours. Your satisfaction is guaranteed.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>What niches do you work with?</span>
+        <span>+</span>
+      </button>
+      <div class="faq-a">We specialize in beauty, skincare, wellness, lifestyle, and supplements. If you have a different product, reach out — we can likely create something amazing for you.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>How do I pay?</span>
+        <span>+</span>
+      </button>
+      <div class="faq-a">We accept Wise and Stripe. Payment is required upfront before work begins. Monthly packages can be paid at the start of each month.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="section-tag reveal">Get In Touch</div>
+  <h2 class="section-title reveal">Ready to <span class="italic">Scale?</span></h2>
+  <p style="color:var(--muted);font-size:15px;max-width:500px;margin:0 auto;font-weight:300;line-height:1.7;" class="reveal">
+    Reach out on any platform. We respond within a few hours — always.
+  </p>
+  <div class="contact-links reveal">
+    <a href="https://wa.me/message/4G43DIK4J6N5A1" target="_blank" class="contact-link">
+      <span class="icon">💬</span> WhatsApp
+    </a>
+    <a href="https://www.instagram.com/metaflux_ads" target="_blank" class="contact-link">
+      <span class="icon">📸</span> Instagram
+    </a>
+    <a href="https://www.facebook.com/share/18p2Qh2RdT/" target="_blank" class="contact-link">
+      <span class="icon">👍</span> Facebook
+    </a>
+    <a href="mailto:lochansaru683@gmail.com" class="contact-link">
+      <span class="icon">📧</span> Email
+    </a>
+  </div>
+  <div class="contact-availability reveal">
+    <div class="pulse"></div>
+    Available 24/7 · Syangja, Nepal · GMT+5:45
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Meta<span>Flux</span> Ads</div>
+  <div class="footer-copy">© 2026 MetaFlux Ads · Lochan Saru · All rights reserved</div>
+  <div class="footer-links">
+    <a href="#how">Process</a>
+    <a href="#packages">Packages</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+// Cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animateCursor() {
+  cursor.style.transform = `translate(${mx-4}px, ${my-4}px)`;
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.transform = `translate(${rx-16}px, ${ry-16}px)`;
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(r => observer.observe(r));
+
+// FAQ
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>
